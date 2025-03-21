@@ -51,13 +51,17 @@ export default function App() {
   <div className="flex flex-col items-center md:items-start md:w-1/2">
     {/* Animated Intro Text */}
     <motion.h1 
-      className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight text-white"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-    >
-      Hi, I'm <span className="text-blue-400">Nitin Kakumanu</span>
-    </motion.h1>
+  className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight text-white mt-4 text-center"
+  style={{ wordBreak: "break-word", whiteSpace: "nowrap", maxWidth: "100%" }}
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+>
+  Hi, I'm <span className="text-blue-400">Nitin Kakumanu</span>
+</motion.h1>
+
+
+
 
     {/* Description */}
     <motion.p 
