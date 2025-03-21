@@ -80,10 +80,10 @@ export default function App() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 0.8 }}
     >
-      <a href="https://github.com/yourgithub" target="_blank" rel="noopener noreferrer">
+      <a href="https://github.com/Nitin-kakumanu" target="_blank" rel="noopener noreferrer">
         <FaGithub className="text-white hover:text-gray-400 transition" size={30} />
       </a>
-      <a href="https://linkedin.com/in/yourlinkedin" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.linkedin.com/in/nitin-kakumanu-92b88a27b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer">
         <FaLinkedin className="text-blue-400 hover:text-blue-300 transition" size={30} />
       </a>
       <a href="mailto:nitinkakumanu04@gmail.com">
