@@ -1,10 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SiMysql } from "react-icons/si";
+import { FiMenu, FiX } from "react-icons/fi";
+import { useState } from "react"; 
 import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
 import { FaPython, FaDatabase, FaBrain, FaHtml5, FaCss3, FaJs, FaReact, FaPhp } from "react-icons/fa";
 
 export default function App() {
+  const [isOpen, setIsOpen] = useState(false);
   const scrollToSection = (id) => {
     document.getElementById(id).scrollIntoView({ behavior: "smooth" });
   };
@@ -13,32 +16,36 @@ export default function App() {
     <div className="bg-gray-900 text-white min-h-screen relative">
       
     {/* Navbar */}
-<nav className="fixed top-0 left-0 w-full bg-gray-800 bg-opacity-90 shadow-lg z-50 py-4 px-4 sm:px-6 flex items-center justify-between">
-  
-  {/* Portfolio Name on the Left (Now Fully Visible) */}
-  <motion.div 
-    className="text-white font-bold tracking-wide text-base sm:text-lg md:text-xl whitespace-nowrap"
-    initial={{ opacity: 0, x: -50 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.8, ease: "easeOut" }}
-  >
-    Nitin's Portfolio
-  </motion.div>
+    <nav className="bg-gray-900 text-white py-4 px-6 fixed w-full top-0 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <a href="#" className="text-3xl font-extrabold text-blue-400">Portfolio</a>
 
-  {/* Navbar Buttons (Right Side) */}
-  <div className="flex space-x-3 sm:space-x-6 text-xs sm:text-sm md:text-base">
-    {["home", "skills", "certificates", "projects", "contact"].map((item) => (
-      <motion.button
-        key={item}
-        className="uppercase tracking-wide text-white hover:text-gray-400 transition-transform transform hover:scale-105"
-        onClick={() => scrollToSection(item)}
-        whileHover={{ scale: 1.1 }}
-      >
-        {item}
-      </motion.button>
-    ))}
-  </div>
-</nav>
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex space-x-8 text-lg">
+            <li><a href="#home" className="hover:text-blue-400 transition">Home</a></li>
+            <li><a href="#skills" className="hover:text-blue-400 transition">Skills</a></li>
+            <li><a href="#projects" className="hover:text-blue-400 transition">Projects</a></li>
+            <li><a href="#certificates" className="hover:text-blue-400 transition">Certificates</a></li>
+            <li><a href="#contact" className="hover:text-blue-400 transition">Contact</a></li>
+          </ul>
+
+          {/* Mobile Menu Toggle */}
+          <button className="md:hidden text-2xl" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+        <ul className="md:hidden flex flex-col items-center space-y-4 text-lg bg-black shadow-md py-4 absolute top-16 left-0 w-full">
+          <li><a href="#home" className="hover:text-blue-400 transition" onClick={() => setIsOpen(false)}>Home</a></li>
+          <li><a href="#skills" className="hover:text-blue-400 transition" onClick={() => setIsOpen(false)}>Skills</a></li>
+          <li><a href="#projects" className="hover:text-blue-400 transition" onClick={() => setIsOpen(false)}>Projects</a></li>
+          <li><a href="#certificates" className="hover:text-blue-400 transition" onClick={() => setIsOpen(false)}>Certificates</a></li>
+          <li><a href="#contact" className="hover:text-blue-400 transition" onClick={() => setIsOpen(false)}>Contact</a></li>
+        </ul>
+      )}
+      </nav>
 
 
       {/* Home Section */}
@@ -83,7 +90,7 @@ export default function App() {
       <a href="https://github.com/Nitin-kakumanu" target="_blank" rel="noopener noreferrer">
         <FaGithub className="text-white hover:text-gray-400 transition" size={30} />
       </a>
-      <a href="https://www.linkedin.com/in/nitin-kakumanu-92b88a27b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.linkedin.com/in/nitin-kakumanu-92b88a27b?" target="_blank" rel="noopener noreferrer">
         <FaLinkedin className="text-blue-400 hover:text-blue-300 transition" size={30} />
       </a>
       <a href="mailto:nitinkakumanu04@gmail.com">
@@ -145,9 +152,10 @@ export default function App() {
       </section>
 
       {/* Certificates Section */}
-      <section id="certificates" className="py-20 text-center px-8">
+      <section id="certificates" className="py-20 text-center px-8 bg-gray-900 text-white">
+  {/* Animated Title */}
   <motion.h2 
-    className="text-4xl font-bold mb-6"
+    className="text-5xl font-extrabold mb-12 text-blue-400"
     initial={{ opacity: 0, y: -20 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8 }}
@@ -157,7 +165,7 @@ export default function App() {
   </motion.h2>
 
   <motion.div 
-    className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto"
     initial="hidden"
     whileInView="visible"
     transition={{ staggerChildren: 0.2 }}
@@ -187,15 +195,15 @@ export default function App() {
     ].map((cert, index) => (
       <motion.div 
         key={index} 
-        className="bg-gray-800 p-6 rounded-lg shadow-lg"
+        className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:border-blue-500 transform hover:scale-105 transition overflow-hidden"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <h3 className="text-xl font-semibold">{cert.title}</h3>
+        <h3 className="text-2xl font-semibold text-blue-300">{cert.title}</h3>
         <p className="text-gray-400 mt-2">{cert.details}</p>
-        <p className="text-blue-300 mt-2"><strong>Issued by:</strong> {cert.issuedBy}</p>
+        <p className="text-blue-300 mt-3 font-semibold"><strong>Issued by:</strong> {cert.issuedBy}</p>
       </motion.div>
     ))}
   </motion.div>
@@ -204,21 +212,21 @@ export default function App() {
 
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 text-center px-8">
+      <section id="projects" className="py-20 text-center px-8 bg-gray-900 text-white">
   {/* Animated Title */}
   <motion.h2 
-    className="text-4xl font-bold mb-6"
+    className="text-5xl font-extrabold mb-12 text-blue-400"
     initial={{ opacity: 0, y: -20 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8 }}
     viewport={{ once: true }}
   >
-    Projects
+    My Projects
   </motion.h2>
 
   {/* Animated Project Cards */}
   <motion.div 
-    className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
     initial="hidden"
     whileInView="visible"
     transition={{ staggerChildren: 0.2 }}
@@ -231,6 +239,7 @@ export default function App() {
         description: "An AI-powered tool that classifies news as real or fake using NLP and machine learning.",
         skills: "Python, NLP, Machine Learning",
         link: "https://github.com/spam-news-detection",
+        deployedLink: "https://spam-news-detection.vercel.app"
       },
       {
         image: "https://plus.unsplash.com/premium_photo-1664300897489-fd98eee64faf?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -238,6 +247,7 @@ export default function App() {
         description: "A system for admins to manage books, track loans, and organize digital resources.",
         skills: "PHP, MySQL, HTML, CSS",
         link: "https://github.com/library-management",
+        deployedLink: "https://library-management.example.com"
       },
       {
         image: "https://plus.unsplash.com/premium_photo-1661775221909-11fc3c0c0891?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -245,6 +255,7 @@ export default function App() {
         description: "A job listing platform where companies can post job openings and candidates can apply.",
         skills: "React, Node.js, PHP, Tableau",
         link: "https://github.com/job-portal",
+        deployedLink: "https://job-portal.example.com"
       },
       {
         image: "https://images.unsplash.com/photo-1649734926695-1b1664e98842?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGFtYXpvbiUyMGxvZ298ZW58MHx8MHx8fDA%3D",
@@ -252,11 +263,28 @@ export default function App() {
         description: "A fully functional e-commerce website replicating Amazon with user authentication and cart system.",
         skills: "React, Tailwind CSS",
         link: "https://github.com/amazon-clone",
+        deployedLink: "https://amazon-clone.example.com"
       },
+      {
+        image: "https://media.istockphoto.com/id/864811534/photo/human-resources-crm-and-recruitment-business-concept-copy-space.jpg?s=1024x1024&w=is&k=20&c=-npxDEXyKiNsAp1opvY8bwcwQdP_-VSEo1MpN_oJk-Q=",
+        title: "Job Searching Portal",
+        description: "A web-based platform that helps users find jobs based on their skills and preferences.",
+        skills: "React, Firebase, Express.js, Tailwind CSS",
+        link: "https://github.com/job-searching-portal",
+        deployedLink: "https://job-searching-portal.example.com"
+      },
+      {
+        image: "https://plus.unsplash.com/premium_photo-1664299072583-584882c00a5f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJhdWQlMjBkZXRlY3Rpb258ZW58MHx8MHx8fDA%3D",
+        title: "Fraud Detection Tool",
+        description: "A machine learning-based system that detects fraudulent transactions in real-time.",
+        skills: "Python, TensorFlow, Scikit-Learn, Flask",
+        link: "https://github.com/fraud-detection-tool",
+        deployedLink: "https://fraud-detection-tool.example.com"
+      }
     ].map((project, index) => (
       <motion.div 
         key={index} 
-        className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition"
+        className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition overflow-hidden border border-gray-700 hover:border-blue-500"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -266,20 +294,22 @@ export default function App() {
         <motion.img 
           src={project.image} 
           alt={project.title} 
-          className="w-full h-40 object-cover rounded transform hover:scale-105 transition"
+          className="w-full h-44 object-cover rounded-lg shadow-md hover:scale-105 transition"
           whileHover={{ scale: 1.05 }}
         />
         
-        <h3 className="text-xl font-semibold mt-4">{project.title}</h3>
+        <h3 className="text-2xl font-semibold mt-4 text-blue-300">{project.title}</h3>
         <p className="text-gray-400 mt-2">{project.description}</p>
         <p className="text-gray-300 mt-2"><strong>Skills:</strong> {project.skills}</p>
-        <div className="mt-3">
-          <a href={project.link} className="text-blue-400 hover:text-blue-300 transition">View on GitHub</a>
+        <div className="mt-4 flex justify-center gap-4">
+          <a href={project.link} target="_blank" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition shadow-md">GitHub</a>
+          <a href={project.deployedLink} target="_blank" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-500 transition shadow-md">Live Demo</a>
         </div>
       </motion.div>
     ))}
   </motion.div>
 </section>
+
 
 {/* Contact Section */}
 <section id="contact" className="py-20 flex flex-col items-center text-center px-8">
