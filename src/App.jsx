@@ -5,6 +5,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { useState } from "react"; 
 import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
 import { FaPython, FaDatabase, FaBrain, FaHtml5, FaCss3, FaJs, FaReact, FaPhp } from "react-icons/fa";
+import nitin from "./assets/nitin2.jpeg";
 
 export default function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,7 +108,7 @@ export default function App() {
     transition={{ duration: 1 }}
   >
     <img 
-      src="/nitin2.jpeg" 
+      src={nitin}
       alt="Profile" 
       className="w-72 h-72 md:w-96 md:h-96 rounded-lg shadow-lg object-cover border-4 border-gray-500 hover:scale-105 transition"
     />
@@ -262,8 +263,8 @@ export default function App() {
         title: "Amazon Clone",
         description: "A fully functional e-commerce website replicating Amazon with user authentication and cart system.",
         skills: "React, Tailwind CSS",
-        link: "https://github.com/amazon-clone",
-        deployedLink: "https://amazon-clone.example.com"
+        link: "https://github.com/Nitin-kakumanu/amazon-clone",
+        deployedLink: "https://amazon-clone-nitin.netlify.app/"
       },
       {
         image: "https://media.istockphoto.com/id/864811534/photo/human-resources-crm-and-recruitment-business-concept-copy-space.jpg?s=1024x1024&w=is&k=20&c=-npxDEXyKiNsAp1opvY8bwcwQdP_-VSEo1MpN_oJk-Q=",
