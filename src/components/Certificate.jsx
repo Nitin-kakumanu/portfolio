@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import NavigationBar from "./Navbar";
 import NavigationControls from "../components/NavigationControls";
-import { Award, Shield, Cloud, Palette, BarChart3, Bot, Globe, Code, Database, Cpu, Zap, Star } from "lucide-react";
+import { Award, Shield, Cloud, Palette, BarChart3, BarChart2, Bot, Globe, Code, Database, Cpu, Zap, Star } from "lucide-react";
 
-// Floating coral particles - matching skills page
+// Reduced floating coral particles
 const FloatingCoralParticles = () => {
-  const particles = Array.from({ length: 8 }, (_, i) => i);
+  const particles = Array.from({ length: 4 }, (_, i) => i);
   
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -19,15 +19,14 @@ const FloatingCoralParticles = () => {
             top: `${Math.random() * 100}%`,
           }}
           animate={{
-            y: [0, -20, 0],
-            x: [0, Math.random() * 10 - 5, 0],
-            opacity: [0.3, 0.6, 0.3],
+            y: [0, -15, 0],
+            opacity: [0.3, 0.5, 0.3],
             scale: [0.5, 1, 0.5],
           }}
           transition={{
-            duration: 4 + Math.random() * 2,
+            duration: 6,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: particle * 1.5,
             ease: "easeInOut",
           }}
         />
@@ -36,27 +35,25 @@ const FloatingCoralParticles = () => {
   );
 };
 
-// Sunlight rays through water
+// Simplified sunlight rays
 const SunlightRays = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    {[...Array(3)].map((_, i) => (
+    {[...Array(2)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute top-0 w-1 bg-gradient-to-b from-yellow-200 via-orange-100 to-transparent opacity-15"
+        className="absolute top-0 w-1 bg-gradient-to-b from-yellow-200 via-orange-100 to-transparent opacity-10"
         style={{
-          left: `${25 + i * 20}%`,
-          height: "80%",
-          transformOrigin: "top",
+          left: `${30 + i * 25}%`,
+          height: "70%",
         }}
         animate={{
-          opacity: [0.1, 0.2, 0.1],
-          scaleX: [1, 1.2, 1],
-          rotateZ: [0, 0.5, -0.5, 0]
+          opacity: [0.08, 0.15, 0.08],
+          scaleX: [1, 1.1, 1],
         }}
         transition={{
-          duration: 5,
+          duration: 8,
           repeat: Infinity,
-          delay: i * 0.6,
+          delay: i * 1.2,
           ease: "easeInOut",
         }}
       />
@@ -64,7 +61,7 @@ const SunlightRays = () => (
   </div>
 );
 
-// Swimming certificate fish
+// Optimized certificate fish - fewer animations
 const CertificateFish = ({ delay = 0, certType = "default" }) => {
   const certFish = {
     web: { emoji: "🐠", color: "text-blue-400", badge: "🌐" },
@@ -82,141 +79,91 @@ const CertificateFish = ({ delay = 0, certType = "default" }) => {
     <motion.div
       className="absolute -left-20"
       style={{ top: `${15 + Math.random() * 50}%` }}
-      initial={{ x: -150, y: 0 }}
+      initial={{ x: -150 }}
       animate={{ 
         x: typeof window !== 'undefined' ? window.innerWidth + 150 : 1400,
-        y: [0, -8, 5, 0],
-        rotateY: [0, 5, -5, 0]
       }}
       transition={{
-        duration: 18 + Math.random() * 4,
+        duration: 20,
         repeat: Infinity,
         delay,
         ease: "linear",
       }}
     >
-      <motion.div
-        className={`relative text-lg ${fish.color}`}
-        animate={{ 
-          scale: [1, 1.05, 1],
-          filter: [
-            "drop-shadow(0 0 4px currentColor)",
-            "drop-shadow(0 0 10px currentColor)",
-            "drop-shadow(0 0 4px currentColor)"
-          ]
-        }}
-        transition={{ duration: 2.5, repeat: Infinity }}
-      >
+      <div className={`relative text-lg ${fish.color}`}>
         <div className="relative">
           {fish.emoji}
-          <motion.span
-            className="absolute -top-1 -right-1 text-xs bg-yellow-200/90 px-1 rounded-full text-yellow-800 font-bold border border-yellow-300"
-            animate={{ 
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ duration: 1.8, repeat: Infinity }}
-          >
+          <span className="absolute -top-1 -right-1 text-xs bg-yellow-200/90 px-1 rounded-full text-yellow-800 font-bold border border-yellow-300">
             {fish.badge}
-          </motion.span>
+          </span>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
 
-// Coral formations with certificate themes
+// Simplified coral formations
 const CertificateCoral = ({ side, certs }) => (
   <motion.div
     className={`absolute bottom-0 ${side === "left" ? "left-2" : "right-2"} h-20 w-10`}
     initial={{ scaleY: 0, opacity: 0 }}
-    animate={{ scaleY: 1, opacity: 0.7 }}
-    transition={{ duration: 2.5, delay: 0.8 }}
+    animate={{ scaleY: 1, opacity: 0.6 }}
+    transition={{ duration: 2, delay: 0.5 }}
   >
-    <motion.div
-      className="relative w-full h-full"
-      animate={{ 
-        rotateZ: [0, side === "left" ? 1 : -1, 0],
-        scaleX: [1, 1.01, 1] 
-      }}
-      transition={{
-        duration: 7,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    >
+    <div className="relative w-full h-full">
       {/* Main coral structure */}
-      <div className="absolute bottom-0 w-full h-4/5 bg-gradient-to-t from-orange-600 via-pink-500 to-red-400 rounded-t-2xl opacity-75" />
+      <div className="absolute bottom-0 w-full h-4/5 bg-gradient-to-t from-orange-600 via-pink-500 to-red-400 rounded-t-2xl opacity-70" />
       
-      {/* Certificate badge polyps */}
+      {/* Simplified certificate badge polyps */}
       {certs.slice(0, 2).map((cert, i) => (
         <motion.div
           key={i}
-          className="absolute w-5 h-5 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full border border-pink-300 flex items-center justify-center shadow-md text-xs"
+          className="absolute w-4 h-4 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full border border-pink-300 flex items-center justify-center shadow-md"
           style={{ 
-            left: `${10 + (i % 2) * 30}%`, 
-            top: `${25 + (i * 30)}%`,
+            left: `${15 + (i % 2) * 25}%`, 
+            top: `${30 + (i * 25)}%`,
           }}
           animate={{
-            scale: [1, 1.1, 1],
-            boxShadow: [
-              "0 0 6px rgba(251, 191, 36, 0.5)",
-              "0 0 12px rgba(251, 191, 36, 0.7)",
-              "0 0 6px rgba(251, 191, 36, 0.5)"
-            ],
+            scale: [1, 1.05, 1],
           }}
           transition={{
-            duration: 3.5,
+            duration: 4,
             repeat: Infinity,
-            delay: i * 0.5,
+            delay: i * 0.8,
           }}
         >
           <cert.iconComponent className="w-2 h-2 text-orange-800" />
         </motion.div>
       ))}
-    </motion.div>
+    </div>
   </motion.div>
 );
 
-// Treasure chest for achievements
+// Simplified treasure chest
 const TreasureChest = ({ position, count }) => (
   <motion.div
     className={`absolute ${position} text-lg`}
     animate={{ 
-      y: [0, -3, 0],
-      rotateZ: [0, 1, -1, 0],
-      scale: [1, 1.01, 1]
+      y: [0, -2, 0],
     }}
     transition={{ 
-      duration: 5.5, 
+      duration: 6, 
       repeat: Infinity,
       ease: "easeInOut" 
     }}
   >
-    <motion.div
-      className="relative"
-      animate={{
-        filter: [
-          "drop-shadow(0 0 6px rgba(251, 191, 36, 0.5))",
-          "drop-shadow(0 0 12px rgba(251, 191, 36, 0.8))",
-          "drop-shadow(0 0 6px rgba(251, 191, 36, 0.5))"
-        ]
-      }}
-      transition={{ duration: 3, repeat: Infinity }}
-    >
+    <div className="relative">
       💰
-      <motion.span
-        className="absolute -top-1 -right-2 text-xs bg-red-500 text-white px-1 rounded-full font-bold"
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        {count}
-      </motion.span>
-    </motion.div>
+      {count && (
+        <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white px-1 rounded-full font-bold">
+          {count}
+        </span>
+      )}
+    </div>
   </motion.div>
 );
 
-// Enhanced Certificate Card - Made smaller
+// Optimized Certificate Card - reduced animations
 const CertificateCard = ({ certificate, index, delay }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -245,12 +192,13 @@ const CertificateCard = ({ certificate, index, delay }) => {
       theme: "📈",
       icon: BarChart3 
     },
-    "Cybersecurity": { 
-      gradient: "from-red-400 to-rose-500", 
-      glow: "rgba(239, 68, 68, 0.4)", 
-      theme: "🛡️",
-      icon: Shield 
-    },
+    "Data Analytics": { 
+  gradient: "from-blue-400 to-cyan-500", 
+  glow: "rgba(59, 130, 246, 0.4)", 
+  theme: "📊",
+  icon: BarChart3 
+},
+
     "Cloud Computing": { 
       gradient: "from-cyan-400 to-sky-500", 
       glow: "rgba(34, 211, 238, 0.4)", 
@@ -270,14 +218,13 @@ const CertificateCard = ({ certificate, index, delay }) => {
   return (
     <motion.div
       className="relative group"
-      initial={{ opacity: 0, y: 20, scale: 0.9, rotateY: -8 }}
-      animate={isVisible ? { opacity: 1, y: 0, scale: 1, rotateY: 0 } : {}}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={isVisible ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ 
-        duration: 0.6, 
+        duration: 0.5, 
         delay: delay / 1000, 
         type: "spring", 
-        stiffness: 120,
-        damping: 12
+        stiffness: 100
       }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -285,44 +232,26 @@ const CertificateCard = ({ certificate, index, delay }) => {
       <motion.div
         className="relative p-3 bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-lg border-2 border-orange-200/60 rounded-xl shadow-lg cursor-pointer overflow-hidden h-28"
         whileHover={{ 
-          scale: 1.03,
-          boxShadow: `0 8px 20px ${certType.glow}`,
+          scale: 1.02,
+          boxShadow: `0 6px 15px ${certType.glow}`,
           borderColor: "rgba(251, 146, 60, 0.7)",
-          rotateY: 1
         }}
-        animate={{
-          y: [0, -0.5, 0],
-          boxShadow: isHovered 
-            ? `0 6px 15px ${certType.glow}` 
-            : "0 3px 10px rgba(251, 146, 60, 0.2)"
-        }}
-        transition={{
-          y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-          boxShadow: { duration: 0.3 }
-        }}
+        transition={{ duration: 0.2 }}
       >
         {/* Certificate ribbon */}
         <motion.div
           className={`absolute top-0 right-0 w-12 h-12 bg-gradient-to-br ${certType.gradient} opacity-0 rounded-bl-xl`}
-          animate={{ opacity: isHovered ? 0.12 : 0 }}
-          transition={{ duration: 0.3 }}
+          animate={{ opacity: isHovered ? 0.1 : 0 }}
+          transition={{ duration: 0.2 }}
         />
 
-        {/* Floating achievement badge */}
+        {/* Achievement badge - simplified animation */}
         <motion.div
           className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-xs shadow-md border border-white"
           animate={{ 
-            rotate: [0, 360],
             scale: isHovered ? 1.05 : 1,
-            boxShadow: isHovered 
-              ? "0 0 12px rgba(251, 191, 36, 0.6)" 
-              : "0 2px 6px rgba(0, 0, 0, 0.1)"
           }}
-          transition={{ 
-            rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-            scale: { duration: 0.3 },
-            boxShadow: { duration: 0.3 }
-          }}
+          transition={{ duration: 0.2 }}
         >
           <span className="text-xs">{certType.theme}</span>
         </motion.div>
@@ -330,43 +259,24 @@ const CertificateCard = ({ certificate, index, delay }) => {
         {/* Certificate content */}
         <div className="relative z-10 h-full flex flex-col">
           {/* Header with icon */}
-          <motion.div
-            className="flex items-center mb-1"
-            animate={{ 
-              y: isHovered ? -0.5 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className="flex items-center mb-1">
             <div className={`w-7 h-7 mr-2 bg-gradient-to-br ${certType.gradient} rounded-lg flex items-center justify-center shadow-sm border border-white/30`}>
               <certType.icon className="w-3 h-3 text-white drop-shadow-sm" />
             </div>
             
             <div className="flex-1 min-w-0">
-              <motion.h3
-                className="text-xs font-bold text-orange-800 leading-tight truncate"
-                initial={{ opacity: 0 }}
-                animate={isVisible ? { opacity: 1 } : {}}
-                transition={{ delay: (delay / 1000) + 0.2 }}
-              >
+              <h3 className="text-xs font-bold text-orange-800 leading-tight truncate">
                 {certificate.title}
-              </motion.h3>
-              <motion.p
-                className="text-xs text-orange-600 font-medium truncate"
-                initial={{ opacity: 0 }}
-                animate={isVisible ? { opacity: 1 } : {}}
-                transition={{ delay: (delay / 1000) + 0.3 }}
-              >
+              </h3>
+              <p className="text-xs text-orange-600 font-medium truncate">
                 {certificate.issuer}
-              </motion.p>
+              </p>
             </div>
-          </motion.div>
+          </div>
 
           {/* Description */}
-          <motion.p
+          <p
             className="text-xs text-orange-700 leading-snug mb-2 flex-1 line-clamp-2"
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { opacity: 1 } : {}}
-            transition={{ delay: (delay / 1000) + 0.4 }}
             style={{
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -375,53 +285,35 @@ const CertificateCard = ({ certificate, index, delay }) => {
             }}
           >
             {certificate.description}
-          </motion.p>
+          </p>
 
           {/* Footer */}
           <div className="flex justify-between items-center">
-            <motion.span
-              className="text-xs text-orange-700 bg-orange-100/80 px-2 py-0.5 rounded-full font-medium border border-orange-200"
-              animate={{
-                boxShadow: [
-                  "0 0 0px rgba(251, 146, 60, 0.3)",
-                  "0 0 6px rgba(251, 146, 60, 0.4)",
-                  "0 0 0px rgba(251, 146, 60, 0.3)"
-                ]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
+            <span className="text-xs text-orange-700 bg-orange-100/80 px-2 py-0.5 rounded-full font-medium border border-orange-200">
               {certificate.year}
-            </motion.span>
+            </span>
             
-            <motion.div
-              className="flex items-center gap-0.5"
-              animate={{
-                scale: [1, 1.03, 1]
-              }}
-              transition={{ duration: 2.5, repeat:  Infinity }}
-            >
+            <div className="flex items-center gap-0.5">
               {[...Array(3)].map((_, i) => (
                 <Star 
                   key={i} 
                   className="w-2 h-2 text-yellow-500 fill-current" 
                 />
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Underwater glow effect */}
-        <motion.div
-          className="absolute inset-0 rounded-xl"
-          animate={{
-            background: [
-              "radial-gradient(circle at 30% 70%, rgba(34, 211, 238, 0) 0%, rgba(34, 211, 238, 0) 100%)",
-              "radial-gradient(circle at 30% 70%, rgba(34, 211, 238, 0.04) 15%, rgba(34, 211, 238, 0) 50%)",
-              "radial-gradient(circle at 30% 70%, rgba(34, 211, 238, 0) 0%, rgba(34, 211, 238, 0) 100%)"
-            ]
-          }}
-          transition={{ duration: 5, repeat: Infinity }}
-        />
+        {/* Simplified glow effect */}
+        {isHovered && (
+          <motion.div
+            className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-200/5 to-blue-200/5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
       </motion.div>
     </motion.div>
   );
@@ -458,12 +350,13 @@ function Certificates() {
       iconComponent: BarChart3
     },
     { 
-      title: "Cybersecurity", 
-      issuer: "Google", 
-      description: "Essential security principles, threat detection, and cybersecurity best practices.", 
+      title: "Data Analytics", 
+      issuer: "NullClass", 
+      description: "Hands-on training in data wrangling, visualization, and statistical analysis using real-world datasets.", 
       year: "2024", 
-      icon: "🔐",
-      iconComponent: Shield
+      icon: "📊",
+      iconComponent: BarChart2
+
     },
     { 
       title: "Cloud Computing", 
@@ -490,7 +383,7 @@ function Certificates() {
   const rightCoralCerts = certificates.slice(3, 6);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 600);
+    const timer = setTimeout(() => setShowContent(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -507,53 +400,37 @@ function Certificates() {
       <CertificateCoral side="left" certs={leftCoralCerts} />
       <CertificateCoral side="right" certs={rightCoralCerts} />
 
-      {/* Swimming certificate fish */}
+      {/* Swimming certificate fish - reduced count */}
       <CertificateFish delay={0} certType="web" />
-      <CertificateFish delay={3} certType="ai" />
-      <CertificateFish delay={6} certType="data" />
-      <CertificateFish delay={9} certType="security" />
-      <CertificateFish delay={12} certType="cloud" />
-      <CertificateFish delay={15} certType="design" />
+      <CertificateFish delay={4} certType="ai" />
+      <CertificateFish delay={8} certType="data" />
+      <CertificateFish delay={12} certType="security" />
 
-      {/* Treasure chests showing achievement count */}
+      {/* Treasure chests */}
       <TreasureChest position="top-16 right-8" count={certificates.length} />
-      <TreasureChest position="top-20 left-4"  />
-      <TreasureChest position="top-24 right-2"  />
+      <TreasureChest position="top-20 left-4" />
 
       {showContent && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 pt-16 pb-4 relative z-20 mt-5">
           <motion.div
             className="text-center mb-3"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             <motion.h1
               className="text-lg md:text-xl font-bold text-orange-600 drop-shadow-xl mb-1"
               style={{
                 textShadow: "0 0 20px rgba(234, 88, 12, 0.5)",
               }}
-              animate={{ 
-                y: [0, -1, 0],
-                textShadow: [
-                  "0 0 20px rgba(234, 88, 12, 0.5)",
-                  "0 0 25px rgba(234, 88, 12, 0.6)",
-                  "0 0 20px rgba(234, 88, 12, 0.5)"
-                ]
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
             >
               🏆 Certificate Treasury
             </motion.h1>
             <motion.p
               className="text-xs md:text-sm text-orange-800 max-w-lg leading-relaxed"
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
             >
               Professional achievements and certifications earned in the depths of knowledge
             </motion.p>
@@ -563,23 +440,23 @@ function Certificates() {
             className={`grid ${showAll ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-2'} gap-3 max-w-3xl w-full mb-3`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
           >
             {visibleCertificates.map((certificate, index) => (
               <CertificateCard
                 key={index}
                 certificate={certificate}
                 index={index}
-                delay={1200 + (index * 120)}
+                delay={600 + (index * 100)}
               />
             ))}
           </motion.div>
 
           <motion.div
             className="flex flex-col items-center gap-2 mb-3"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.6 }}
+            transition={{ delay: 1, duration: 0.5 }}
           >
             <motion.button
               onClick={() => setShowAll(!showAll)}
@@ -591,19 +468,9 @@ function Certificates() {
               {showAll ? "🐚 Show Core Certificates" : "🗝️ Discover All Treasures"}
             </motion.button>
 
-            <motion.p
-              className="text-xs text-orange-700 bg-orange-100/70 px-3 py-1 rounded-lg border border-orange-200"
-              animate={{
-                boxShadow: [
-                  "0 0 0px rgba(251, 146, 60, 0.3)",
-                  "0 0 8px rgba(251, 146, 60, 0.4)",
-                  "0 0 0px rgba(251, 146, 60, 0.3)"
-                ]
-              }}
-              transition={{ duration: 3.5, repeat: Infinity }}
-            >
+            <p className="text-xs text-orange-700 bg-orange-100/70 px-3 py-1 rounded-lg border border-orange-200">
               🎖️ {certificates.length} Professional Certifications Earned
-            </motion.p>
+            </p>
 
             <NavigationControls next="/contact" prev="/projects" />
           </motion.div>
@@ -611,9 +478,9 @@ function Certificates() {
           {/* Floating instruction */}
           <motion.div
             className="text-center"
-            animate={{ y: [0, -2, 0], opacity: [0.4, 0.7, 0.4] }}
-            transition={{ duration: 3.5, repeat: Infinity, delay: 3 }}
             initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ delay: 2, duration: 0.5 }}
           >
             <div className="text-orange-600 text-xs font-medium flex items-center gap-2">
               <span>🌊</span>
@@ -623,26 +490,25 @@ function Certificates() {
         </div>
       )}
 
-      {/* Ambient certificate particles */}
+      {/* Simplified ambient particles */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(2)].map((_, i) => (
           <motion.div
             key={`cert-particle-${i}`}
-            className="absolute w-1 h-1 bg-yellow-400 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-yellow-400 rounded-full opacity-40"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              opacity: [0.3, 0.7, 0.3],
-              scale: [1, 1.2, 1],
-              y: [0, -8, 0],
-              rotate: [0, 180, 360]
+              opacity: [0.2, 0.5, 0.2],
+              scale: [1, 1.1, 1],
+              y: [0, -5, 0],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 5,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: i * 2,
             }}
           />
         ))}

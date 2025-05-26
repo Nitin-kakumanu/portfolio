@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import profileImage from "../assets/nitin2.jpeg";
 import NavigationBar from "./Navbar";
 import NavigationControls from "./NavigationControls";
@@ -9,30 +9,36 @@ const bubblesAnim = "https://lottie.host/5keUeGJrDR.json";
 const fishAnim = "https://lottiefiles.com/animation/fishes-8356973";
 const shellAnim = "https://lottiefiles.com/animation/shell-9545412";
 
-// Floating sand particles component
+// Memoized floating sand particles component with reduced count
 const FloatingSandParticles = () => {
-  const particles = Array.from({ length: 20 }, (_, i) => i);
+  const particles = useMemo(() => Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    delay: Math.random() * 3,
+    duration: 4 + Math.random() * 2
+  })), []);
   
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {particles.map((particle) => (
         <motion.div
-          key={particle}
+          key={particle.id}
           className="absolute w-1 h-1 bg-amber-200 rounded-full opacity-40"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
           }}
           animate={{
             y: [0, -40, 0],
-            x: [0, Math.random() * 25 - 12.5, 0],
+            x: [0, 12, -12, 0],
             opacity: [0.2, 0.6, 0.2],
             scale: [0.5, 1.2, 0.5],
           }}
           transition={{
-            duration: 4 + Math.random() * 3,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: particle.delay,
             ease: "easeInOut",
           }}
         />
@@ -41,83 +47,24 @@ const FloatingSandParticles = () => {
   );
 };
 
-// Coral formations component
-const CoralFormation = ({ side = "left" }) => (
-  <motion.div
-    className={`absolute bottom-0 ${side === "left" ? "left-6" : "right-6"} h-40 w-12`}
-    initial={{ scaleY: 1, opacity: 0.8 }}
-    animate={{ scaleY: 1, opacity: 0.8 }}
-  >
-    <motion.div
-      className="relative w-full h-full"
-      animate={{ 
-        rotateZ: [0, side === "left" ? 3 : -3, 0],
-        scaleX: [1, 1.05, 1] 
-      }}
-      transition={{
-        duration: 5,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    >
-      {/* Main coral structure */}
-      <div className="absolute bottom-0 w-full h-3/4 bg-gradient-to-t from-orange-600 via-pink-500 to-red-400 rounded-t-3xl" />
-      
-      {/* Coral branches */}
-      <motion.div
-        className="absolute bottom-1/2 left-1/4 w-6 h-16 bg-gradient-to-t from-pink-600 to-orange-400 rounded-full transform -rotate-12"
-        animate={{ rotateZ: [-12, -8, -12] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-2/3 right-1/4 w-5 h-12 bg-gradient-to-t from-red-500 to-pink-400 rounded-full transform rotate-15"
-        animate={{ rotateZ: [15, 20, 15] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      />
-      
-      {/* Coral polyps */}
-      {[...Array(4)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-yellow-300 rounded-full border border-orange-300"
-          style={{ 
-            left: `${20 + (i * 15)}%`, 
-            top: `${30 + (i * 10)}%` 
-          }}
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.7, 1, 0.7],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            delay: i * 0.3,
-          }}
-        />
-      ))}
-    </motion.div>
-  </motion.div>
-);
-
-// Sea anemone component
-const SeaAnemone = ({ position, color = "pink" }) => {
-  const colorVariants = {
-    pink: "from-pink-500 to-purple-400",
-    orange: "from-orange-500 to-red-400",
-    yellow: "from-yellow-500 to-orange-400"
-  };
+// Optimized coral formation with simplified animations
+const CoralFormation = ({ side = "left" }) => {
+  const polyps = useMemo(() => Array.from({ length: 3 }, (_, i) => ({
+    id: i,
+    left: 20 + (i * 20),
+    top: 30 + (i * 10),
+    delay: i * 0.3
+  })), []);
 
   return (
     <motion.div
-      className={`absolute ${position} w-16 h-20`}
-      initial={{ opacity: 0.9, scale: 1 }}
-      animate={{ opacity: 0.9, scale: 1 }}
+      className={`absolute bottom-0 ${side === "left" ? "left-6" : "right-6"} h-40 w-12`}
+      initial={{ scaleY: 1, opacity: 0.8 }}
     >
       <motion.div
         className="relative w-full h-full"
         animate={{ 
-          scale: [1, 1.1, 1],
-          rotateZ: [0, 5, -5, 0]
+          rotateZ: [0, side === "left" ? 2 : -2, 0],
         }}
         transition={{
           duration: 6,
@@ -125,24 +72,94 @@ const SeaAnemone = ({ position, color = "pink" }) => {
           ease: "easeInOut",
         }}
       >
-        {/* Anemone tentacles */}
-        {[...Array(8)].map((_, i) => (
+        {/* Main coral structure */}
+        <div className="absolute bottom-0 w-full h-3/4 bg-gradient-to-t from-orange-600 via-pink-500 to-red-400 rounded-t-3xl" />
+        
+        {/* Simplified coral branches */}
+        <motion.div
+          className="absolute bottom-1/2 left-1/4 w-6 h-16 bg-gradient-to-t from-pink-600 to-orange-400 rounded-full transform -rotate-12"
+          animate={{ rotateZ: [-12, -8, -12] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-2/3 right-1/4 w-5 h-12 bg-gradient-to-t from-red-500 to-pink-400 rounded-full transform rotate-15"
+          animate={{ rotateZ: [15, 18, 15] }}
+          transition={{ duration: 5, repeat: Infinity }}
+        />
+        
+        {/* Reduced coral polyps */}
+        {polyps.map((polyp) => (
           <motion.div
-            key={i}
-            className={`absolute bottom-0 w-2 h-12 bg-gradient-to-t ${colorVariants[color]} rounded-full opacity-80`}
-            style={{
-              left: `${12.5 * i}%`,
-              transformOrigin: "bottom center",
-              transform: `rotate(${(i - 4) * 15}deg)`,
+            key={polyp.id}
+            className="absolute w-2 h-2 bg-yellow-300 rounded-full border border-orange-300"
+            style={{ 
+              left: `${polyp.left}%`, 
+              top: `${polyp.top}%` 
             }}
             animate={{
-              rotateZ: [(i - 4) * 15 - 10, (i - 4) * 15 + 10, (i - 4) * 15 - 10],
-              scaleY: [1, 1.2, 1],
+              scale: [1, 1.2, 1],
+              opacity: [0.7, 1, 0.7],
             }}
             transition={{
-              duration: 3 + Math.random(),
+              duration: 3,
               repeat: Infinity,
-              delay: i * 0.2,
+              delay: polyp.delay,
+            }}
+          />
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Optimized sea anemone with fewer tentacles
+const SeaAnemone = ({ position, color = "pink" }) => {
+  const colorVariants = {
+    pink: "from-pink-500 to-purple-400",
+    orange: "from-orange-500 to-red-400",
+    yellow: "from-yellow-500 to-orange-400"
+  };
+
+  const tentacles = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
+    id: i,
+    rotation: (i - 3) * 20,
+    delay: i * 0.2,
+    duration: 3 + (i * 0.1)
+  })), []);
+
+  return (
+    <motion.div
+      className={`absolute ${position} w-16 h-20`}
+      initial={{ opacity: 0.9, scale: 1 }}
+    >
+      <motion.div
+        className="relative w-full h-full"
+        animate={{ 
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        {/* Anemone tentacles */}
+        {tentacles.map((tentacle) => (
+          <motion.div
+            key={tentacle.id}
+            className={`absolute bottom-0 w-2 h-12 bg-gradient-to-t ${colorVariants[color]} rounded-full opacity-80`}
+            style={{
+              left: `${16.66 * tentacle.id}%`,
+              transformOrigin: "bottom center",
+              transform: `rotate(${tentacle.rotation}deg)`,
+            }}
+            animate={{
+              rotateZ: [tentacle.rotation - 8, tentacle.rotation + 8, tentacle.rotation - 8],
+            }}
+            transition={{
+              duration: tentacle.duration,
+              repeat: Infinity,
+              delay: tentacle.delay,
             }}
           />
         ))}
@@ -151,22 +168,28 @@ const SeaAnemone = ({ position, color = "pink" }) => {
         <motion.div
           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-t from-yellow-400 to-orange-300 rounded-full"
           animate={{
-            scale: [1, 1.15, 1],
-            boxShadow: [
-              "0 0 10px rgba(251, 191, 36, 0.5)",
-              "0 0 20px rgba(251, 191, 36, 0.8)",
-              "0 0 10px rgba(251, 191, 36, 0.5)"
-            ]
+            scale: [1, 1.1, 1],
           }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 3, repeat: Infinity }}
         />
       </motion.div>
     </motion.div>
   );
 };
 
-// Exotic fish component
+// Optimized exotic fish with stable animations
 const ExoticFish = ({ delay = 0, type = "tropical" }) => {
+  const [windowWidth, setWindowWidth] = useState(1400);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
   const fishTypes = {
     tropical: { emoji: "🐠", color: "text-orange-400", size: "text-4xl" },
     angel: { emoji: "🐟", color: "text-yellow-400", size: "text-3xl" },
@@ -181,12 +204,11 @@ const ExoticFish = ({ delay = 0, type = "tropical" }) => {
       className={`absolute top-1/3 -left-20 ${fish.size} ${fish.color}`}
       initial={{ x: -150, y: 0 }}
       animate={{ 
-        x: typeof window !== 'undefined' ? window.innerWidth + 150 : 1400,
-        y: [0, -30, 25, 0],
-        rotateY: [0, 10, -10, 0]
+        x: windowWidth + 150,
+        y: [0, -20, 15, 0],
       }}
       transition={{
-        duration: 18 + Math.random() * 4,
+        duration: 20,
         repeat: Infinity,
         delay,
         ease: "linear",
@@ -194,14 +216,9 @@ const ExoticFish = ({ delay = 0, type = "tropical" }) => {
     >
       <motion.div
         animate={{ 
-          scale: [1, 1.1, 1],
-          filter: [
-            "drop-shadow(0 0 5px currentColor)",
-            "drop-shadow(0 0 15px currentColor)",
-            "drop-shadow(0 0 5px currentColor)"
-          ]
+          scale: [1, 1.05, 1],
         }}
-        transition={{ duration: 2, repeat: Infinity }}
+        transition={{ duration: 3, repeat: Infinity }}
       >
         {fish.emoji}
       </motion.div>
@@ -209,113 +226,189 @@ const ExoticFish = ({ delay = 0, type = "tropical" }) => {
   );
 };
 
-// Sunlight rays through water
-const SunlightRays = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    {[...Array(6)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute top-0 w-2 bg-gradient-to-b from-yellow-200 via-orange-100 to-transparent opacity-25"
-        style={{
-          left: `${15 + i * 12}%`,
-          height: "100%",
-          transformOrigin: "top",
-        }}
-        animate={{
-          opacity: [0.15, 0.35, 0.15],
-          scaleX: [1, 1.8, 1],
-          rotateZ: [0, 2, -2, 0]
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          delay: i * 0.8,
-          ease: "easeInOut",
-        }}
-      />
-    ))}
-  </div>
-);
+// Simplified sunlight rays
+const SunlightRays = () => {
+  const rays = useMemo(() => Array.from({ length: 4 }, (_, i) => ({
+    id: i,
+    left: 15 + i * 18,
+    delay: i * 1
+  })), []);
 
-// Profile image with underwater effects
-const ProfileImage = () => (
-  <motion.div
-    className="relative mb-8"
-    initial={{ opacity: 1, scale: 1, y: 0 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-  >
-    <div className="relative flex items-center justify-center w-52 h-52 mx-auto my-6">
-      {/* Underwater bubble glow effect */}
-      ?
-
-      {/* Profile Image */}
-      <img
-        src={profileImage}
-        alt="Underwater Coral Avatar"
-        className="rounded-full w-full h-full object-cover border-4 border-cyan-300 shadow-lg"
-      />
-    </div>
-    
-    {/* Main profile container */}
-    <motion.div
-      className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-orange-300/50 shadow-2xl"
-      animate={{ 
-        y: [0, -8, 0],
-        rotateZ: [0, 1, -1, 0]
-      }}
-      transition={{ 
-        duration: 4, 
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    >
-      {/* Placeholder profile image - replace with actual image */}
-      <div className="w-full h-full bg-gradient-to-br from-orange-300 via-yellow-200 to-pink-300 flex items-center justify-center">
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {rays.map((ray) => (
         <motion.div
-          className="text-6xl"
+          key={ray.id}
+          className="absolute top-0 w-2 bg-gradient-to-b from-yellow-200 via-orange-100 to-transparent opacity-25"
+          style={{
+            left: `${ray.left}%`,
+            height: "100%",
+            transformOrigin: "top",
+          }}
+          animate={{
+            opacity: [0.15, 0.3, 0.15],
+            scaleX: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            delay: ray.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Optimized floating creatures with reduced animation complexity
+const FloatingCreatures = () => {
+  const creatures = useMemo(() => [
+    { emoji: "🦀", position: "top-1/4 right-20", size: "text-4xl", duration: 8 },
+    { emoji: "🐚", position: "top-2/3 left-16", size: "text-3xl", duration: 6 },
+    { emoji: "⭐", position: "top-1/2 right-12", size: "text-2xl", duration: 5 }
+  ], []);
+
+  return (
+    <>
+      {creatures.map((creature, i) => (
+        <motion.div
+          key={i}
+          className={`absolute ${creature.position} ${creature.size}`}
           animate={{ 
-            scale: [1, 1.05, 1],
-            rotateZ: [0, 5, -5, 0]
+            y: [0, -15, 0],
+            x: [0, 5, -5, 0],
+          }}
+          transition={{ 
+            duration: creature.duration, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i
+          }}
+        >
+          {creature.emoji}
+        </motion.div>
+      ))}
+    </>
+  );
+};
+
+// Optimized profile image component
+const ProfileImageComponent = () => {
+  const bubbles = useMemo(() => Array.from({ length: 4 }, (_, i) => ({
+    id: i,
+    left: 10 + Math.cos(i * 90 * Math.PI / 180) * 80,
+    top: 10 + Math.sin(i * 90 * Math.PI / 180) * 80,
+    delay: i * 0.2
+  })), []);
+
+  return (
+    <motion.div
+      className="relative mb-4"
+      initial={{ opacity: 1, scale: 1, y: 0 }}
+    >
+      {/* Underwater bubble effect around image */}
+      <motion.div
+        className="absolute -inset-2 rounded-full"
+        animate={{
+          boxShadow: [
+            "0 0 15px 3px rgba(34, 211, 238, 0.3)",
+            "0 0 20px 4px rgba(59, 130, 246, 0.4)",
+            "0 0 15px 3px rgba(34, 211, 238, 0.3)"
+          ]
+        }}
+        transition={{ duration: 4, repeat: Infinity }}
+      />
+      
+      {/* Profile container */}
+      <motion.div
+        className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-orange-300/50 shadow-xl"
+        animate={{ 
+          y: [0, -4, 0],
+        }}
+        transition={{ 
+          duration: 5, 
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        {/* Use actual profile image */}
+        <img
+          src={profileImage}
+          alt="Profile"
+          className="w-full h-full object-cover"
+          loading="eager"
+        />
+        
+        {/* Water ripple effect overlay */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-t from-cyan-200/20 via-transparent to-blue-200/10"
+          animate={{
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 3, repeat: Infinity }}
-        >
-          👨‍💻
-        </motion.div>
-      </div>
-      
-      {/* Water ripple effect overlay */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-t from-cyan-200/20 via-transparent to-blue-200/10"
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{ duration: 2.5, repeat: Infinity }}
-      />
-    </motion.div>
+        />
+      </motion.div>
 
-    {/* Floating bubbles around profile */}
-    {[...Array(6)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-3 h-3 bg-white/40 rounded-full"
-        style={{
-          left: `${20 + Math.cos(i * 60 * Math.PI / 180) * 120}px`,
-          top: `${20 + Math.sin(i * 60 * Math.PI / 180) * 120}px`,
-        }}
-        animate={{
-          y: [0, -20, 0],
-          opacity: [0.4, 0.8, 0.4],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: i * 0.3,
-        }}
-      />
-    ))}
-  </motion.div>
-);
+      {/* Floating bubbles around profile */}
+      {bubbles.map((bubble) => (
+        <motion.div
+          key={bubble.id}
+          className="absolute w-2 h-2 bg-white/40 rounded-full"
+          style={{
+            left: `${bubble.left}px`,
+            top: `${bubble.top}px`,
+          }}
+          animate={{
+            y: [0, -12, 0],
+            opacity: [0.4, 0.7, 0.4],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            delay: bubble.delay,
+          }}
+        />
+      ))}
+    </motion.div>
+  );
+};
+
+// Optimized ambient particles with reduced count
+const AmbientParticles = () => {
+  const particles = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    delay: Math.random() * 3,
+    duration: 3 + Math.random()
+  })), []);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute w-1 h-1 bg-orange-300 rounded-full opacity-40"
+          style={{
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+          }}
+          animate={{
+            opacity: [0.2, 0.6, 0.2],
+            scale: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 function Home() {
   return (
@@ -338,198 +431,61 @@ function Home() {
 
       {/* Exotic swimming creatures */}
       <ExoticFish delay={0} type="tropical" />
-      <ExoticFish delay={6} type="angel" />
-      <ExoticFish delay={12} type="exotic" />
-      <ExoticFish delay={18} type="clown" />
+      <ExoticFish delay={8} type="angel" />
+      <ExoticFish delay={16} type="exotic" />
 
-      {/* Enhanced Lottie Animations */}
+      {/* Floating creatures */}
+      <FloatingCreatures />
+
+      {/* Enhanced Lottie Animations - Reduced count */}
       <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
       >
-        {/* Bubbles with coral theme */}
+        {/* Essential bubbles only */}
         <LottieWrapper 
           animationData={bubblesAnim} 
-          className="bottom-0 left-10 w-32 h-32" 
+          className="bottom-0 left-10 w-28 h-28" 
         />
         <LottieWrapper 
           animationData={bubblesAnim} 
-          className="bottom-10 right-12 w-24 h-24" 
-        />
-        <LottieWrapper 
-          animationData={bubblesAnim} 
-          className="top-20 left-1/3 w-20 h-20" 
+          className="bottom-10 right-12 w-20 h-20" 
         />
         
-        {/* Fish animations */}
+        {/* One fish animation */}
         <LottieWrapper 
           animationData={fishAnim} 
-          className="top-40 left-0 w-40" 
-        />
-        <LottieWrapper 
-          animationData={fishAnim} 
-          className="top-60 right-0 w-36" 
+          className="top-40 left-0 w-36" 
         />
         
         {/* Treasure shell */}
         <LottieWrapper 
           animationData={shellAnim} 
-          className="bottom-0 left-1/2 transform -translate-x-1/2 w-20" 
+          className="bottom-0 left-1/2 transform -translate-x-1/2 w-18" 
           loop={false} 
         />
       </motion.div>
 
-      {/* Floating sea creatures */}
-      <motion.div
-        className="absolute top-1/4 right-20 text-4xl"
-        animate={{ 
-          y: [0, -20, 0],
-          x: [0, 8, -8, 0],
-          rotateZ: [0, 10, -10, 0]
-        }}
-        transition={{ 
-          duration: 7, 
-          repeat: Infinity,
-          ease: "easeInOut" 
-        }}
-      >
-        🦀
-      </motion.div>
-      
-      <motion.div
-        className="absolute top-2/3 left-16 text-3xl"
-        animate={{ 
-          y: [0, -15, 0],
-          x: [0, -5, 5, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{ 
-          duration: 5, 
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      >
-        🐚
-      </motion.div>
-
-      <motion.div
-        className="absolute top-1/2 right-12 text-2xl"
-        animate={{ 
-          y: [0, -12, 0],
-          rotateZ: [0, 15, -15, 0]
-        }}
-        transition={{ 
-          duration: 4, 
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2
-        }}
-      >
-        ⭐
-      </motion.div>
-
-      {/* Main content - Compact single view */}
+      {/* Main content */}
       <motion.div
         className="flex flex-col items-center justify-center h-screen text-center px-4 relative z-10 -mt-12"
         initial={{ opacity: 1, y: 0, scale: 1 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
       >
-        {/* Compact Profile Image */}
-        <motion.div
-          className="relative mb-4"
-          initial={{ opacity: 1, scale: 1, y: 0 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-        >
-          {/* Underwater bubble effect around image */}
-          <motion.div
-            className="absolute -inset-2 rounded-full"
-            animate={{
-              boxShadow: [
-                "0 0 15px 3px rgba(34, 211, 238, 0.3)",
-                "0 0 25px 5px rgba(59, 130, 246, 0.4)",
-                "0 0 15px 3px rgba(34, 211, 238, 0.3)"
-              ]
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
-          
-          {/* Compact profile container */}
-          <motion.div
-            className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-orange-300/50 shadow-xl"
-            animate={{ 
-              y: [0, -6, 0],
-              rotateZ: [0, 1, -1, 0]
-            }}
-            transition={{ 
-              duration: 4, 
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            {/* Profile image content */}
-            <div className="w-full h-full bg-gradient-to-br from-orange-300 via-yellow-200 to-pink-300 flex items-center justify-center">
-              <motion.div
-                className="text-4xl"
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  rotateZ: [0, 3, -3, 0]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                👨‍💻
-              </motion.div>
-            </div>
-            
-            {/* Water ripple effect overlay */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-cyan-200/20 via-transparent to-blue-200/10"
-              animate={{
-                opacity: [0.3, 0.6, 0.3],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity }}
-            />
-          </motion.div>
+        {/* Profile Image */}
+        <ProfileImageComponent />
 
-          {/* Compact floating bubbles around profile */}
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-white/40 rounded-full"
-              style={{
-                left: `${10 + Math.cos(i * 90 * Math.PI / 180) * 80}px`,
-                top: `${10 + Math.sin(i * 90 * Math.PI / 180) * 80}px`,
-              }}
-              animate={{
-                y: [0, -15, 0],
-                opacity: [0.4, 0.8, 0.4],
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-            />
-          ))}
-        </motion.div>
-
-        {/* Compact Title */}
+        {/* Title */}
         <motion.h1
           className="text-2xl md:text-3xl font-bold text-orange-600 drop-shadow-xl relative mb-3"
-          style={{
-            textShadow: "0 0 15px rgba(234, 88, 12, 0.4)",
-          }}
           animate={{ 
-            y: [0, -5, 0],
             textShadow: [
               "0 0 15px rgba(234, 88, 12, 0.4)",
-              "0 0 25px rgba(234, 88, 12, 0.6)",
+              "0 0 20px rgba(234, 88, 12, 0.5)",
               "0 0 15px rgba(234, 88, 12, 0.4)"
             ]
           }}
           transition={{
-            duration: 4,
+            duration: 5,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -537,25 +493,19 @@ function Home() {
           🏝️ Welcome to Coral Depths
         </motion.h1>
 
-        {/* Compact Subtitle */}
+        {/* Subtitle */}
         <motion.p
           className="text-sm md:text-base text-orange-800 max-w-xl relative leading-snug mb-4"
           initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
         >
           I'm{" "}
           <motion.span 
             className="text-red-600 font-bold relative inline-block px-1 py-0.5 rounded bg-yellow-200/50"
             animate={{ 
-              scale: [1, 1.03, 1],
-              boxShadow: [
-                "0 0 8px rgba(220, 38, 38, 0.3)",
-                "0 0 15px rgba(220, 38, 38, 0.5)",
-                "0 0 8px rgba(220, 38, 38, 0.3)"
-              ]
+              scale: [1, 1.02, 1],
             }}
             transition={{ 
-              duration: 3, 
+              duration: 4, 
               repeat: Infinity,
               ease: "easeInOut"
             }}
@@ -567,11 +517,10 @@ function Home() {
           <span className="text-purple-600 font-semibold">AI Explorer</span> diving deep into the coral reefs of technology.
         </motion.p>
 
-        {/* Compact Call to action */}
+        {/* Call to action */}
         <motion.div
           className="mb-4 p-3 bg-gradient-to-r from-orange-200/60 to-yellow-200/60 backdrop-blur-sm rounded-xl border border-orange-300/40"
           initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
         >
           <p className="text-orange-700 font-medium text-sm">
             🌺 Dive deeper to discover treasures of innovation
@@ -581,17 +530,16 @@ function Home() {
         {/* Navigation Controls */}
         <motion.div
           initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
           className="mb-4"
         >
           <NavigationControls next="/skills" />
         </motion.div>
 
-        {/* Compact action indicator */}
+        {/* Action indicator */}
         <motion.div
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
         >
           <div className="text-orange-600 text-xs font-medium opacity-70 flex items-center gap-1">
             <span>🏊‍♂️</span>
@@ -601,27 +549,7 @@ function Home() {
       </motion.div>
 
       {/* Ambient particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={`ambient-${i}`}
-            className="absolute w-1 h-1 bg-orange-300 rounded-full opacity-40"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 2, 1],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
-      </div>
+      <AmbientParticles />
     </div>
   );
 }
